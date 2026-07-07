@@ -1,0 +1,7 @@
+return {
+  default = {
+    -- Appends dist_test to the internal Lua search path
+    -- So require("src.id") correctly finds dist_test/src/id.lua
+    lpath = "./dist/?.lua;./dist/?/init.lua;"
+  }
+}

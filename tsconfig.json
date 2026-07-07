@@ -1,0 +1,22 @@
+{
+  "$schema": "https://raw.githubusercontent.com/TypeScriptToLua/TypeScriptToLua/master/tsconfig-schema.json",
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["ESNext"],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "types": [],
+    "strict": true,
+    "rootDir": ".",
+    "outDir": "dist",
+    "declaration": true,
+    "declarationDir": "dist/@types"
+  },
+  "include": ["src/**/*", "spec/**/*", "types/**/*"],
+  "tstl": {
+    "luaTarget": "5.4",
+    "buildMode": "library",
+    "luaLibImport": "require-minimal",
+    "noResolvePaths": ["chatterino.json"]
+  }
+}

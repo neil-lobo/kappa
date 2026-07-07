@@ -1,0 +1,33 @@
+{
+  "name": "@neil-lobo/kappa",
+  "version": "0.0.12",
+  "description": "A collection of common utils for Chatterino plugins",
+  "scripts": {
+    "clean:build": "rm -rf dist",
+    "init:test": "rm -rf data_test && mkdir data_test",
+    "build": "npm run clean:build && tstl -p tsconfig.publish.json",
+    "build:test": "npm run clean:build && tstl",
+    "start:test": "busted --helper=dist/spec/setup.lua dist/spec",
+    "test": "npm run init:test && npm run build:test && npm run init:test && npm run start:test"
+  },
+  "files": [
+    "dist"
+  ],
+  "types": "./dist/@types/index.d.ts",
+  "main": "./dist/index",
+  "keywords": [
+    "chatterino"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^6.0.2",
+    "typescript-to-lua": "^1.37.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com-neil:neil-lobo/kappa.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
