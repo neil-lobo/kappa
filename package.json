@@ -20,6 +20,7 @@
   ],
   "license": "MIT",
   "devDependencies": {
+    "lua-types": "^2.14.1",
     "typescript": "^6.0.2",
     "typescript-to-lua": "^1.37.0"
   },
