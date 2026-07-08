@@ -14,9 +14,10 @@ const LogLevelStr: Record<number, string> = {
 
 // 2. Define the mock implementation
 globalThis.c2 = {
-  log: (level: c2.LogLevel, ...message: any[]): void => {
+  log: (level: c2.LogLevel, ...messages: any[]): void => {
     const levelStr = LogLevelStr[level] ?? `LEVEL-${level}`;
-    print(`[${levelStr}]`, ...message);
+
+    print("chatterino.lua: [kappa:Kappa Test Suite]", ...messages);
   },
   LogLevel,
 } as typeof c2;
