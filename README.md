@@ -13,7 +13,7 @@ npm install @neil-lobo/kappa
 
 ## Features
 
-- Lightweight `fs` library
+- Simple `fs` utils
 - Custom `setInterval` and `clearInterval` implementations
 - ID generation
 
