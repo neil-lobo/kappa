@@ -1,4 +1,4 @@
-import { writeFile, readFile } from "../src";
+import { writeFile, readFile } from "../src/fs";
 
 describe("fs tests", () => {
   const rawSettings = `
@@ -22,12 +22,12 @@ describe("fs tests", () => {
 `;
 
   it("write", () => {
-    const [_, errStr] = writeFile("data_test/settings.json", "w", rawSettings);
+    const [_, errStr] = writeFile("settings.json", "w", rawSettings);
     assert.equals(undefined, errStr);
   });
 
   it("read", () => {
-    const [data, errStr] = readFile("data_test/settings.json");
+    const [data, errStr] = readFile("settings.json");
 
     assert.equals(undefined, errStr);
     assert.equals(rawSettings, data);
@@ -41,12 +41,12 @@ describe("fs tests", () => {
     ];
 
     for (const line of lines) {
-      const [_, errStr] = writeFile("data_test/poem.txt", "a", `${line}\n`);
+      const [_, errStr] = writeFile("poem.txt", "a", `${line}\n`);
 
       assert.equals(undefined, errStr);
     }
 
-    const [data] = readFile("data_test/poem.txt");
+    const [data] = readFile("poem.txt");
     assert.equals(`${lines.join("\n")}\n`, data);
   });
 });

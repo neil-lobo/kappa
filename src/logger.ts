@@ -90,7 +90,6 @@ export class Logger {
         }
         case "file": {
           if (this._fileOutputError) break;
-          // TODO: mock fs so data is written in correct parent folder
           const [_, err] = writeFile(output.filename, "a", messageStr);
           if (err) {
             this._fileOutputError = err;

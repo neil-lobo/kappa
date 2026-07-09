@@ -1,3 +1,9 @@
+import {
+  writeFile as realWriteFile,
+  WriteMode,
+  readFile as readlReadFile,
+} from "../src";
+
 const LogLevel = {
   Debug: 0,
   Info: 1,
@@ -12,7 +18,6 @@ const LogLevelStr: Record<number, string> = {
   3: "Critical",
 };
 
-// 2. Define the mock implementation
 globalThis.c2 = {
   log: (level: c2.LogLevel, ...messages: any[]): void => {
     const levelStr = LogLevelStr[level] ?? `LEVEL-${level}`;
@@ -21,3 +26,22 @@ globalThis.c2 = {
   },
   LogLevel,
 } as typeof c2;
+
+const mockFs = {
+  writeFile: (
+    path: string,
+    mode: WriteMode,
+    data: string,
+  ): ReturnType<typeof realWriteFile> => {
+    return realWriteFile(`data_test/${path}`, mode, data);
+  },
+
+  readFile: (path: string): ReturnType<typeof readlReadFile> => {
+    return readlReadFile(`data_test/${path}`);
+  },
+};
+
+// @ts-ignore
+package.loaded["src.fs"] = mockFs;
+// @ts-ignore
+package.loaded["src/fs"] = mockFs;
