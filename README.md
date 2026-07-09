@@ -16,10 +16,10 @@ npm install @neil-lobo/kappa
 - Simple `fs` utils
 - Custom `setInterval` and `clearInterval` implementations
 - ID generation
+- Configurable logger
 
 ## Planned
 
 - Command constructor with autocompletion support
-- Configurable logger
 - Fetch API
 - Settings controller
