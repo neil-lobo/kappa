@@ -19,13 +19,12 @@
     "chatterino"
   ],
   "license": "MIT",
-  "devDependencies": {
+  "dependencies": {
     "lua-types": "^2.14.1",
-    "typescript": "^6.0.2",
     "typescript-to-lua": "^1.37.0"
   },
-  "peerDependencies": {
-    "typescript-to-lua": "^1.37.0"
+  "devDependencies": {
+    "typescript": "^6.0.2"
   },
   "repository": {
     "type": "git",
