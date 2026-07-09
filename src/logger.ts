@@ -90,7 +90,7 @@ export class Logger {
         }
         case "file": {
           if (this._fileOutputError) break;
-          const [_, err] = writeFile(output.filename, "a", messageStr);
+          const [_, err] = writeFile(output.filename, "a", `${messageStr}\n`);
           if (err) {
             this._fileOutputError = err;
             this.error("Unable to write log to file:", err);
@@ -107,6 +107,14 @@ export class Logger {
         }
       }
     }
+  }
+
+  getMemoryLogs() {
+    return [...this._logs];
+  }
+
+  clearMemoryLogs() {
+    this._logs = [];
   }
 
   debug(...message: string[]) {
