@@ -24,6 +24,9 @@
     "typescript": "^6.0.2",
     "typescript-to-lua": "^1.37.0"
   },
+  "peerDependencies": {
+    "typescript-to-lua": "^1.37.0"
+  },
   "repository": {
     "type": "git",
     "url": "git@github.com-neil:neil-lobo/kappa.git"
