@@ -25,7 +25,6 @@
         devShells.default = pkgs.mkShell {
           buildInputs = [
             luaEnv
-            pkgs.luarocks
           ];
         };
       }
