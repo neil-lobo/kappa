@@ -2,7 +2,7 @@ import {
   writeFile as realWriteFile,
   WriteMode,
   readFile as readlReadFile,
-} from "../src";
+} from "../src/fs";
 
 const LogLevel = {
   Debug: 0,
@@ -20,8 +20,6 @@ const LogLevelStr: Record<number, string> = {
 
 globalThis.c2 = {
   log: (level: c2.LogLevel, ...messages: any[]): void => {
-    const levelStr = LogLevelStr[level] ?? `LEVEL-${level}`;
-
     print("chatterino.lua: [kappa:Kappa Test Suite]", ...messages);
   },
   LogLevel,
