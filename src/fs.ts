@@ -2,7 +2,7 @@ export type WriteMode = "w" | "a";
 
 export function writeFile(
   path: string,
-  mode: string,
+  mode: WriteMode,
   data: string,
 ): LuaMultiReturn<[undefined] | [undefined, string]> {
   const [file, errStr] = io.open(path, mode);
