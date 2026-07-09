@@ -23,3 +23,4 @@ npm install @neil-lobo/kappa
 - Command constructor with autocompletion support
 - Fetch API
 - Settings controller
+- Message clone util
