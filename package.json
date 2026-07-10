@@ -8,7 +8,7 @@
     "build": "npm run clean:build && tstl -p tsconfig.publish.json && cp README.md dist/",
     "build:test": "npm run clean:build && tstl",
     "start:test": "busted --helper=dist/spec/setup.lua dist/spec",
-    "test": "npm run init:test && npm run build:test && npm run init:test && npm run start:test"
+    "test": "npm run init:test && npm run build:test && npm run start:test"
   },
   "files": [
     "dist"

@@ -1,0 +1,33 @@
+name: Test
+
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Deps
+        run: |
+          npm ci
+
+      - name: Init Test
+        run: |
+          npm run init:test
+
+      - name: Build Test
+        run: |
+          npm run build:test
+
+      - name: Run Test
+        run: |
+          docker run -v "$(pwd):/data" ghcr.io/lunarmodules/busted:v2.3.0 --helper=dist/spec/setup.lua dist/spec
