@@ -4,18 +4,18 @@ import {
   readFile as readlReadFile,
 } from "../src/fs";
 
+// @ts-ignore
+import * as impl from "./lua/json";
+const json: {
+  encode: (obj: any) => string;
+  decode: (str: string) => any;
+} = impl;
+
 const LogLevel = {
   Debug: 0,
   Info: 1,
   Warning: 2,
   Critical: 3,
-};
-
-const LogLevelStr: Record<number, string> = {
-  0: "Debug",
-  1: "Info",
-  2: "Warning",
-  3: "Critical",
 };
 
 globalThis.c2 = {
@@ -39,7 +39,15 @@ const mockFs = {
   },
 };
 
+const mockJson = {
+  /** @noSelf */
+  parse: (str: string): any => json.decode(str),
+  /** @noSelf */
+  stringify: (obj: any): string => json.encode(obj),
+};
+
 // @ts-ignore
 package.loaded["src.fs"] = mockFs;
+
 // @ts-ignore
-package.loaded["src/fs"] = mockFs;
+package.loaded["chatterino.json"] = mockJson;
