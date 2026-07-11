@@ -1,5 +1,10 @@
 import { Result } from "./result";
-import { assertUnreachable, eq, getSupportedType } from "./utils";
+import {
+  assertUnreachable,
+  eq,
+  getSupportedType,
+  SupportedType,
+} from "./utils";
 
 export type SchemaString = { type: "string" };
 export type SchemaNumber = { type: "number" };
@@ -43,13 +48,6 @@ function boolean(): SchemaBoolean {
   return {
     type: "boolean",
   };
-}
-
-export function schemaEq(
-  schema1: Schema,
-  schema2: Schema,
-): Result<boolean, string> {
-  return eq(schema1, schema2);
 }
 
 function object<T extends { [k: string]: Schema }>(
@@ -115,6 +113,13 @@ function array<T extends Schema>(element: T): { type: "array"; element: T } {
   };
 }
 
+export function schemaEq(
+  schema1: Schema,
+  schema2: Schema,
+): Result<boolean, string> {
+  return eq(schema1, schema2);
+}
+
 function parse<T extends Schema>(
   schema: T,
   value: any,
@@ -151,7 +156,7 @@ function parse<T extends Schema>(
       }
     }
     case "array": {
-      const _value = value as Schema[];
+      const _value = value as SupportedType[];
 
       const out = [];
       for (let i = 0; i < _value.length; i++) {

@@ -83,15 +83,17 @@ const SUPPORTED_TYPES = [
   "object",
 ] as const;
 
-export function getSupportedType<T extends (typeof SUPPORTED_TYPES)[number]>(
+export type SupportedType = (typeof SUPPORTED_TYPES)[number];
+
+export function getSupportedType<T extends SupportedType>(
   value: T,
-): Result<(typeof SUPPORTED_TYPES)[number], string> {
+): Result<SupportedType, string> {
   const type = typeof value;
 
   if (["string", "number", "boolean", "undefined", "object"].includes(type)) {
     return {
       ok: true,
-      value: type as (typeof SUPPORTED_TYPES)[number],
+      value: type as SupportedType,
     };
   }
 
