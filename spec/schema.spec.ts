@@ -271,6 +271,31 @@ describe("schema tests", () => {
           assert.is_true(!res.ok);
         });
       });
+
+      describe("object", () => {
+        it("missing field", () => {
+          const schema = s.object({
+            foo: s.boolean(),
+            bar: s.object({
+              baz: s.array(
+                s.object({
+                  fizz: s.number(),
+                }),
+              ),
+            }),
+          });
+
+          const value = {
+            bar: {
+              baz: [{ fizz: 0 }, { fizz: 1 }, { fizz: 2 }],
+            },
+          };
+
+          const res = s.parse(schema, value);
+
+          assert.is_true(!res.ok);
+        });
+      });
     });
   });
 });
