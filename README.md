@@ -17,6 +17,7 @@ npm install @neil-lobo/kappa
 - Custom `setInterval` and `clearInterval` implementations
 - ID generation
 - Configurable logger
+- Schema validation
 
 ## Planned
 
