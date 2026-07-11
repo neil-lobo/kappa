@@ -1,4 +1,5 @@
-import { assertUnreachable } from "./utils";
+import { Result } from "./result";
+import { assertUnreachable, eq, getSupportedType } from "./utils";
 
 export type SchemaString = { type: "string" };
 export type SchemaNumber = { type: "number" };
@@ -10,6 +11,21 @@ export type SchemaArray = { type: "array"; element: Schema };
 export type SchemaObject = { type: "object"; fields: { [k: string]: Schema } };
 
 export type Schema = SchemaPrimative | SchemaArray | SchemaObject;
+
+type SchemaToParseResult<T extends Schema> = T extends SchemaString
+  ? string
+  : T extends SchemaNumber
+    ? number
+    : T extends SchemaBoolean
+      ? boolean
+      : T extends { type: "array"; element: infer E extends Schema }
+        ? SchemaToParseResult<E>[]
+        : T extends {
+              type: "object";
+              fields: infer F extends { [k: string]: Schema };
+            }
+          ? { [K in keyof F]: SchemaToParseResult<F[K]> }
+          : never;
 
 function string(): SchemaString {
   return {
@@ -29,42 +45,11 @@ function boolean(): SchemaBoolean {
   };
 }
 
-function schemaEq(schema1: Schema, schema2: Schema) {
-  if (schema1.type !== schema2.type) return false;
-
-  const type = schema1.type;
-  switch (type) {
-    case "string":
-    case "number":
-    case "boolean": {
-      return true;
-    }
-    case "array": {
-      return schemaEq(schema1.element, (schema2 as SchemaArray).element);
-    }
-    case "object": {
-      const keys1 = Object.keys(schema1.fields).toSorted();
-      const keys2 = Object.keys((schema2 as SchemaObject).fields).toSorted();
-
-      if (keys1.length !== keys2.length) return false;
-
-      for (let i = 0; i < keys1.length; i++) {
-        if (keys1[i] !== keys2[i]) return false;
-
-        if (
-          !schemaEq(
-            schema1.fields[keys1[i]],
-            (schema2 as SchemaObject).fields[keys2[i]],
-          )
-        )
-          return false;
-      }
-      return true;
-    }
-    default: {
-      assertUnreachable(type);
-    }
-  }
+export function schemaEq(
+  schema1: Schema,
+  schema2: Schema,
+): Result<boolean, string> {
+  return eq(schema1, schema2);
 }
 
 function object<T extends { [k: string]: Schema }>(
@@ -130,13 +115,90 @@ function array<T extends Schema>(element: T): { type: "array"; element: T } {
   };
 }
 
+function parse<T extends Schema>(
+  schema: T,
+  value: any,
+): Result<SchemaToParseResult<T>, string> {
+  const type = schema.type;
+  const valueTypeRes = getSupportedType(value);
+  if (!valueTypeRes.ok) {
+    return valueTypeRes;
+  }
+
+  const valueType = valueTypeRes.value;
+
+  if (!Array.isArray(value) && valueType !== type) {
+    return {
+      ok: false,
+      error: `Expected ${type}, got ${valueType}`,
+    };
+  }
+
+  switch (type) {
+    case "string":
+    case "number":
+    case "boolean": {
+      if (valueType === type) {
+        return {
+          ok: true,
+          value,
+        };
+      } else {
+        return {
+          ok: false,
+          error: `Expected ${type}, got ${valueType}`,
+        };
+      }
+    }
+    case "array": {
+      const _value = value as Schema[];
+
+      const out = [];
+      for (let i = 0; i < _value.length; i++) {
+        const elem = _value[i];
+        const res = parse(schema.element, elem);
+        if (!res.ok) {
+          return {
+            ok: false,
+            error: `At [${i}]: ${res.error}`,
+          };
+        } else {
+          out.push(res.value);
+        }
+      }
+
+      return {
+        ok: true,
+        value: out as any,
+      };
+    }
+    case "object": {
+      const out: { [k: string]: SchemaToParseResult<T> } = {};
+      for (const [k, v] of Object.entries(schema.fields)) {
+        const res = parse(v, value[k]);
+        if (!res.ok) {
+          return res;
+        }
+
+        out[k] = res.value as SchemaToParseResult<T>;
+      }
+
+      return {
+        ok: true,
+        value: out as any,
+      };
+    }
+    default: {
+      assertUnreachable(type);
+    }
+  }
+}
+
 export const s = {
   string,
   number,
   boolean,
   array,
   object,
-  schemaEq,
+  parse,
 };
-
-// type A = SchemaResult<typeof a>;
