@@ -1,4 +1,4 @@
-import { Result } from "./result";
+import { err, ok, Result } from "./result";
 
 export function assertUnreachable(x: never): never {
   throw new Error("unreachable");
@@ -11,11 +11,9 @@ export function unwrap<T>(result: Result<T, any>) {
 }
 
 export function arrayEq(arr1: any[], arr2: any[]): Result<boolean, string> {
-  if (arr1.length !== arr2.length)
-    return {
-      ok: true,
-      value: false,
-    };
+  if (arr1.length !== arr2.length) {
+    return ok(false);
+  }
 
   for (let i = 0; i < arr1.length; i++) {
     const elem1 = arr1[i];
@@ -27,17 +25,11 @@ export function arrayEq(arr1: any[], arr2: any[]): Result<boolean, string> {
     }
 
     if (res.value === false) {
-      return {
-        ok: true,
-        value: false,
-      };
+      return ok(false);
     }
   }
 
-  return {
-    ok: true,
-    value: true,
-  };
+  return ok(true);
 }
 
 function objectEq(
@@ -46,18 +38,14 @@ function objectEq(
 ): Result<boolean, string> {
   const keys1 = Object.keys(obj1).toSorted();
   const keys2 = Object.keys(obj2).toSorted();
-  const neqRes = {
-    ok: true,
-    value: false,
-  } as const;
 
   if (keys1.length !== keys2.length) {
-    return neqRes;
+    return ok(false);
   }
 
   for (let i = 0; i < keys1.length; i++) {
     if (keys1[i] !== keys2[i]) {
-      return neqRes;
+      return ok(false);
     }
 
     const res = eq(obj1[keys1[i]], obj2[keys2[i]]);
@@ -66,13 +54,10 @@ function objectEq(
     }
 
     if (res.value === false) {
-      return neqRes;
+      return ok(false);
     }
   }
-  return {
-    ok: true,
-    value: true,
-  };
+  return ok(true);
 }
 
 const SUPPORTED_TYPES = [
@@ -91,16 +76,10 @@ export function getSupportedType<T extends SupportedType>(
   const type = typeof value;
 
   if (["string", "number", "boolean", "undefined", "object"].includes(type)) {
-    return {
-      ok: true,
-      value: type as SupportedType,
-    };
+    return ok(type as SupportedType);
   }
 
-  return {
-    ok: false,
-    error: `"${type}" not supported`,
-  };
+  return err(`"${type}" not supported`);
 }
 
 export function eq(obj1: any, obj2: any): Result<boolean, string> {
@@ -108,17 +87,11 @@ export function eq(obj1: any, obj2: any): Result<boolean, string> {
   const type2Res = getSupportedType(obj2);
 
   if (!type1Res.ok) {
-    return {
-      ok: false,
-      error: `obj1: ${type1Res.error}`,
-    };
+    return err(`obj1: ${type1Res.error}`);
   }
 
   if (!type2Res.ok) {
-    return {
-      ok: false,
-      error: `obj2: ${obj2.error}`,
-    };
+    return err(`obj2: ${obj2.error}`);
   }
 
   const type1 = type1Res.value;
@@ -128,10 +101,7 @@ export function eq(obj1: any, obj2: any): Result<boolean, string> {
     case "string":
     case "number":
     case "boolean": {
-      return {
-        ok: true,
-        value: type1 === type2 && obj1 === obj2,
-      };
+      return ok(type1 === type2 && obj1 === obj2);
     }
     case "object": {
       const isArray1 = Array.isArray(obj1);
@@ -141,10 +111,7 @@ export function eq(obj1: any, obj2: any): Result<boolean, string> {
         if (isArray1 && isArray2) {
           return arrayEq(obj1, obj2);
         } else {
-          return {
-            ok: true,
-            value: false,
-          };
+          return ok(false);
         }
       }
 

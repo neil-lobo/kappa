@@ -1,4 +1,4 @@
-import { Result } from "./result";
+import { err, ok, Result } from "./result";
 
 export type WriteMode = "w" | "a";
 
@@ -10,26 +10,17 @@ export function writeFile(
   const [file, errStr] = io.open(path, mode);
 
   if (!file) {
-    return {
-      ok: false,
-      error: errStr,
-    };
+    return err(errStr);
   }
 
   const [written, writtenErrStr] = file.write(data);
   if (!written) {
-    return {
-      ok: false,
-      error: writtenErrStr,
-    };
+    return err(writtenErrStr);
   }
 
   file.close();
 
-  return {
-    ok: true,
-    value: undefined,
-  };
+  return ok(undefined);
 }
 
 export function readFile(path: string): Result<string, string> {

@@ -1,4 +1,4 @@
-import { Result } from "./result";
+import { err, ok, Result } from "./result";
 import {
   assertUnreachable,
   eq,
@@ -133,10 +133,7 @@ function parse<T extends Schema>(
   const valueType = valueTypeRes.value;
 
   if (!Array.isArray(value) && valueType !== type) {
-    return {
-      ok: false,
-      error: `Expected ${type}, got ${valueType}`,
-    };
+    return err(`Expected ${type}, got ${valueType}`);
   }
 
   switch (type) {
@@ -144,15 +141,9 @@ function parse<T extends Schema>(
     case "number":
     case "boolean": {
       if (valueType === type) {
-        return {
-          ok: true,
-          value,
-        };
+        return ok(value);
       } else {
-        return {
-          ok: false,
-          error: `Expected ${type}, got ${valueType}`,
-        };
+        return err(`Expected ${type}, got ${valueType}`);
       }
     }
     case "array": {
@@ -163,19 +154,13 @@ function parse<T extends Schema>(
         const elem = _value[i];
         const res = parse(schema.element, elem);
         if (!res.ok) {
-          return {
-            ok: false,
-            error: `At [${i}]: ${res.error}`,
-          };
+          return err(`At [${i}]: ${res.error}`);
         } else {
           out.push(res.value);
         }
       }
 
-      return {
-        ok: true,
-        value: out as any,
-      };
+      return ok(out as any);
     }
     case "object": {
       const out: { [k: string]: SchemaToParseResult<T> } = {};
@@ -188,10 +173,7 @@ function parse<T extends Schema>(
         out[k] = res.value as SchemaToParseResult<T>;
       }
 
-      return {
-        ok: true,
-        value: out as any,
-      };
+      return ok(out as any);
     }
     default: {
       assertUnreachable(type);
