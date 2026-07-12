@@ -18,6 +18,7 @@ npm install @neil-lobo/kappa
 - ID generation
 - Configurable logger
 - Schema validation
+- Result type
 
 ## Planned
 
