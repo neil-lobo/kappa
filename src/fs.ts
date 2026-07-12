@@ -27,22 +27,13 @@ export function readFile(path: string): Result<string, string> {
   const [file, errStr] = io.open(path, "r");
 
   if (!file) {
-    return {
-      ok: false,
-      error: errStr,
-    };
+    return err(errStr);
   }
 
   const data = file.read("a");
   if (!data) {
-    return {
-      ok: false,
-      error: "No data read",
-    };
+    return err("No data read");
   }
 
-  return {
-    ok: true,
-    value: data,
-  };
+  return ok(data);
 }
