@@ -67,21 +67,15 @@ function object<T extends { [k: string]: Schema }>(
     const type = value.type;
     switch (type) {
       case "string": {
-        fieldValue = {
-          type: "string",
-        } satisfies SchemaString;
+        fieldValue = string();
         break;
       }
       case "number": {
-        fieldValue = {
-          type: "number",
-        } satisfies SchemaNumber;
+        fieldValue = number();
         break;
       }
       case "boolean": {
-        fieldValue = {
-          type: "boolean",
-        } satisfies SchemaBoolean;
+        fieldValue = boolean();
         break;
       }
       case "object": {
