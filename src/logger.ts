@@ -90,10 +90,10 @@ export class Logger {
         }
         case "file": {
           if (this._fileOutputError) break;
-          const [_, err] = writeFile(output.filename, "a", `${messageStr}\n`);
-          if (err) {
-            this._fileOutputError = err;
-            this.error("Unable to write log to file:", err);
+          const res = writeFile(output.filename, "a", `${messageStr}\n`);
+          if (!res.ok) {
+            this._fileOutputError = res.error;
+            this.error("Unable to write log to file:", res.error);
           }
 
           break;

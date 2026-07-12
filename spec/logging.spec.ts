@@ -95,8 +95,10 @@ describe("logger", () => {
 
     logLogs(_log);
 
-    const [data] = readFile(filename);
-    assert.equals(`${logs.map((l) => l.text).join("\n")}\n`, data);
+    const res = readFile(filename);
+
+    assert.is_true(res.ok);
+    assert.equals(`${logs.map((l) => l.text).join("\n")}\n`, res.value);
   });
 
   it("min log level", () => {

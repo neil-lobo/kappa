@@ -22,15 +22,16 @@ describe("fs tests", () => {
 `;
 
   it("write", () => {
-    const [_, errStr] = writeFile("settings.json", "w", rawSettings);
-    assert.equals(undefined, errStr);
+    const res = writeFile("settings.json", "w", rawSettings);
+
+    assert.is_true(res.ok);
   });
 
   it("read", () => {
-    const [data, errStr] = readFile("settings.json");
+    const res = readFile("settings.json");
 
-    assert.equals(undefined, errStr);
-    assert.equals(rawSettings, data);
+    assert.is_true(res.ok);
+    assert.equals(rawSettings, res.value);
   });
 
   it("append", () => {
@@ -41,12 +42,13 @@ describe("fs tests", () => {
     ];
 
     for (const line of lines) {
-      const [_, errStr] = writeFile("poem.txt", "a", `${line}\n`);
+      const res = writeFile("poem.txt", "a", `${line}\n`);
 
-      assert.equals(undefined, errStr);
+      assert.is_true(res.ok);
     }
 
-    const [data] = readFile("poem.txt");
-    assert.equals(`${lines.join("\n")}\n`, data);
+    const res = readFile("poem.txt");
+    assert.is_true(res.ok);
+    assert.equals(`${lines.join("\n")}\n`, res.value);
   });
 });

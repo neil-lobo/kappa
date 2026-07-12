@@ -1,39 +1,57 @@
+import { Result } from "./result";
+
 export type WriteMode = "w" | "a";
 
 export function writeFile(
   path: string,
   mode: WriteMode,
   data: string,
-): LuaMultiReturn<[undefined] | [undefined, string]> {
+): Result<void, string> {
   const [file, errStr] = io.open(path, mode);
 
   if (!file) {
-    return $multi(undefined, errStr);
+    return {
+      ok: false,
+      error: errStr,
+    };
   }
 
   const [written, writtenErrStr] = file.write(data);
   if (!written) {
-    return $multi(undefined, writtenErrStr);
+    return {
+      ok: false,
+      error: writtenErrStr,
+    };
   }
 
   file.close();
 
-  return $multi(undefined);
+  return {
+    ok: true,
+    value: undefined,
+  };
 }
 
-export function readFile(
-  path: string,
-): LuaMultiReturn<[string] | [undefined, string]> {
+export function readFile(path: string): Result<string, string> {
   const [file, errStr] = io.open(path, "r");
 
   if (!file) {
-    return $multi(undefined, errStr);
+    return {
+      ok: false,
+      error: errStr,
+    };
   }
 
   const data = file.read("a");
   if (!data) {
-    return $multi(undefined, "Read no data");
+    return {
+      ok: false,
+      error: "No data read",
+    };
   }
 
-  return $multi(data);
+  return {
+    ok: true,
+    value: data,
+  };
 }
