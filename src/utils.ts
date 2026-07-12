@@ -4,12 +4,6 @@ export function assertUnreachable(x: never): never {
   throw new Error("unreachable");
 }
 
-export function unwrap<T>(result: Result<T, any>) {
-  if (!result.ok) throw new Error("unwrapped error result");
-
-  return result.value;
-}
-
 export function arrayEq(arr1: any[], arr2: any[]): Result<boolean, string> {
   if (arr1.length !== arr2.length) {
     return ok(false);

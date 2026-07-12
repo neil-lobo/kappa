@@ -1,5 +1,6 @@
+import { unwrap } from "../src/result";
 import { s, schemaEq } from "../src/schema";
-import { eq, unwrap } from "../src/utils";
+import { eq } from "../src/utils";
 
 // TODO: test error messages?
 describe("schema tests", () => {

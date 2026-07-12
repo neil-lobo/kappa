@@ -10,6 +10,12 @@ export type Failure<E> = {
 
 export type Result<T, E> = Success<T> | Failure<E>;
 
+export function unwrap<T>(result: Result<T, any>) {
+  if (!result.ok) throw new Error("unwrapped error result");
+
+  return result.value;
+}
+
 export function ok<T>(value: T): Success<T> {
   return {
     ok: true,
