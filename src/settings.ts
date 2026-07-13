@@ -85,41 +85,46 @@ export class SettingsController<T extends SchemaObject> {
       return parseRes;
     }
 
+    const preValRes = this.getSetting(keyRes.value);
+    if (!preValRes.ok) {
+      return preValRes;
+    }
+
     // @ts-ignore
     this._settings[keyRes.value] = parseRes.value;
+    const flushRes = this.flushSettings();
+    if (!flushRes) {
+      // @ts-ignore
+      this._settings[keyRes.value] = preValRes.value;
+      return flushRes;
+    }
 
     return ok(undefined);
   }
 
-  //   setSetting<T extends keyof typeof this.keys>(
-  //     key: T,
-  //     value: Exclude<(typeof this.keys)[T], undefined>,
-  //   ) {
-  //     const preVal = this.getSetting(key);
-
-  //     try {
-  //       this.keys[key] = value;
-
-  //       this.flushSettings();
-  //     } catch (err) {
-  //       this.keys[key] = preVal;
-  //       throw err;
-  //     }
-  //   }
-
   loadSettings() {
-    const res = readFile(this._filePath);
+    const readRes = readFile(this._filePath);
 
-    // TODO: parse
-
-    if (res.ok) {
-      this._settings = parse(res.value) as SchemaToParseResult<T>;
-    } else {
+    if (!readRes.ok) {
       // TODO: log error
+      return;
     }
+
+    const parseRes = s.parse(this._schema, parse(readRes.value));
+    if (!parseRes.ok) {
+      return parseRes;
+    }
+
+    this._settings = parseRes.value;
   }
 
   flushSettings(): Result<void, string> {
-    return writeFile(this._filePath, "w", stringify(this._settings));
+    return writeFile(
+      this._filePath,
+      "w",
+      stringify(this._settings, {
+        pretty: true,
+      }),
+    );
   }
 }
