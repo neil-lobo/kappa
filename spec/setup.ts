@@ -43,7 +43,10 @@ const mockJson = {
   /** @noSelf */
   parse: (str: string): any => json.decode(str),
   /** @noSelf */
-  stringify: (obj: any): string => json.encode(obj),
+  stringify: (
+    obj: any,
+    _opts?: { pretty?: boolean; indent_char?: string; indent_size?: number },
+  ): string => json.encode(obj),
 };
 
 // @ts-ignore

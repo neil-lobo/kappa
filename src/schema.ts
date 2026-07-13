@@ -17,7 +17,7 @@ export type SchemaObject = { type: "object"; fields: { [k: string]: Schema } };
 
 export type Schema = SchemaPrimative | SchemaArray | SchemaObject;
 
-type SchemaToParseResult<T extends Schema> = T extends SchemaString
+export type SchemaToParseResult<T extends Schema> = T extends SchemaString
   ? string
   : T extends SchemaNumber
     ? number

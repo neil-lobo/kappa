@@ -22,13 +22,13 @@ describe("fs tests", () => {
 `;
 
   it("write", () => {
-    const res = writeFile("settings.json", "w", rawSettings);
+    const res = writeFile("_settings.json", "w", rawSettings);
 
     assert.is_true(res.ok);
   });
 
   it("read", () => {
-    const res = readFile("settings.json");
+    const res = readFile("_settings.json");
 
     assert.is_true(res.ok);
     assert.equals(rawSettings, res.value);
