@@ -3,28 +3,57 @@ import { readFile, writeFile } from "./fs";
 import { s, SchemaObject, SchemaToParseResult } from "./schema";
 import { err, ok, Result } from "./result";
 import { assertUnreachable } from "./utils";
+import { Logger } from "./logger";
 
+type SettingsContollerOptions = {
+  filePath: string;
+  logger: Logger;
+};
 export class SettingsController<T extends SchemaObject> {
   _settings: SchemaToParseResult<T>;
-  _filePath: string;
   _schema: T;
+  _defaultValues: SchemaToParseResult<T>;
   _keys: (keyof SchemaToParseResult<T>)[];
+  _defaultOptions: SettingsContollerOptions = {
+    filePath: "settings.json",
+    logger: new Logger({
+      prefix: "[Settings]",
+      prefixLevel: true,
+    }),
+  };
+  _options: SettingsContollerOptions;
 
   constructor(
     schema: T,
     defaultValues: SchemaToParseResult<T>,
-    options: {
-      filePath: string;
-    } = {
-      filePath: "settings.json",
-    },
+    options: Partial<SettingsContollerOptions> = {},
   ) {
     this._schema = schema;
     this._keys = Object.keys(schema.fields);
+    this._defaultValues = defaultValues;
     this._settings = defaultValues;
-    this._filePath = options.filePath;
+    this._options = Object.assign(this._defaultOptions, options);
 
+    this.init();
     this.loadSettings();
+  }
+
+  init() {
+    const readRes = readFile(this._options.filePath);
+    if (readRes.ok) {
+      return;
+    }
+
+    const writeRes = writeFile(
+      this._options.filePath,
+      "w",
+      stringify(this._defaultValues),
+    );
+    if (!writeRes.ok) {
+      this._options.logger.error(
+        `Unable to write initial settings file: ${writeRes.error}`,
+      );
+    }
   }
 
   getKey<K extends keyof typeof this._settings>(key: K): Result<K, string> {
@@ -93,9 +122,11 @@ export class SettingsController<T extends SchemaObject> {
     // @ts-ignore
     this._settings[keyRes.value] = parseRes.value;
     const flushRes = this.flushSettings();
-    if (!flushRes) {
+
+    if (!flushRes.ok) {
       // @ts-ignore
       this._settings[keyRes.value] = preValRes.value;
+      this._options.logger.error(`Unable to flush settings: ${flushRes.error}`);
       return flushRes;
     }
 
@@ -103,10 +134,13 @@ export class SettingsController<T extends SchemaObject> {
   }
 
   loadSettings() {
-    const readRes = readFile(this._filePath);
+    const readRes = readFile(this._options.filePath);
 
     if (!readRes.ok) {
-      // TODO: log error
+      this._options.logger.error(
+        `Unable to load settings file: ${readRes.error}`,
+      );
+      this._options.logger.error(`Using default settings`);
       return;
     }
 
@@ -120,7 +154,7 @@ export class SettingsController<T extends SchemaObject> {
 
   flushSettings(): Result<void, string> {
     return writeFile(
-      this._filePath,
+      this._options.filePath,
       "w",
       stringify(this._settings, {
         pretty: true,

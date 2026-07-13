@@ -52,7 +52,9 @@ describe("settings tests", () => {
     };
 
     it("primative", () => {
-      const settings = new SettingsController(schema, defaultValues);
+      const settings = new SettingsController(schema, defaultValues, {
+        filePath: "settings1.json",
+      });
 
       assert.equals(defaultValues.foo, unwrap(settings.getSetting("foo")));
       const newVal = 123;
@@ -62,7 +64,9 @@ describe("settings tests", () => {
     });
 
     it("complex", () => {
-      const settings = new SettingsController(schema, defaultValues);
+      const settings = new SettingsController(schema, defaultValues, {
+        filePath: "settings2.json",
+      });
 
       const value = unwrap(settings.getSetting("bar"));
       value.push({
