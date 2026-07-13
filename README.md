@@ -19,10 +19,10 @@ npm install @neil-lobo/kappa
 - Configurable logger
 - Schema validation
 - Result type
+- Settings controller
 
 ## Planned
 
 - Command constructor with autocompletion support
 - Fetch API
-- Settings controller
 - Message clone util
