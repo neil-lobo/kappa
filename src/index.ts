@@ -6,3 +6,4 @@ export * from "./result";
 export * from "./schema";
 export * from "./utils";
 export * from "./settings";
+export * from "./fetch";
