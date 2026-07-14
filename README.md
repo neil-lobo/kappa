@@ -20,9 +20,9 @@ npm install @neil-lobo/kappa
 - Schema validation
 - Result type
 - Settings controller
+- Fetch API
 
 ## Planned
 
 - Command constructor with autocompletion support
-- Fetch API
 - Message clone util
