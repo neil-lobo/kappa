@@ -17,6 +17,6 @@
     "luaTarget": "5.4",
     "buildMode": "library",
     "luaLibImport": "require-minimal",
-    "noResolvePaths": ["chatterino.json"]
+    "noResolvePaths": ["chatterino.json", "http.request", "http.headers"]
   }
 }

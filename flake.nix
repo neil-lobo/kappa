@@ -19,6 +19,7 @@
 
         luaEnv = pkgs.lua5_4.withPackages (ps: [
           ps.busted
+          ps.http
         ]);
       in
       {
