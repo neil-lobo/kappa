@@ -150,6 +150,16 @@ describe("schema tests", () => {
             assert.equals(value, res.value);
           });
         });
+
+        it("any", () => {
+          const schema = s.array(s.any());
+          const value = [1, true, "AAwd", { foo: "bar" }];
+
+          const res = s.parse(schema, value);
+
+          assert.is_true(res.ok);
+          assert.is_true(unwrap(eq(value, res.value)));
+        });
       });
 
       describe("array", () => {

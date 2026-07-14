@@ -9,8 +9,13 @@ import {
 export type SchemaString = { type: "string" };
 export type SchemaNumber = { type: "number" };
 export type SchemaBoolean = { type: "boolean" };
+export type SchemaAny = { type: "any" };
 
-export type SchemaPrimative = SchemaString | SchemaNumber | SchemaBoolean;
+export type SchemaPrimative =
+  | SchemaString
+  | SchemaNumber
+  | SchemaBoolean
+  | SchemaAny;
 
 export type SchemaArray = { type: "array"; element: Schema };
 export type SchemaObject = { type: "object"; fields: { [k: string]: Schema } };
@@ -50,6 +55,12 @@ function boolean(): SchemaBoolean {
   };
 }
 
+function any(): SchemaAny {
+  return {
+    type: "any",
+  };
+}
+
 function object<T extends { [k: string]: Schema }>(
   obj: T,
 ): {
@@ -76,6 +87,10 @@ function object<T extends { [k: string]: Schema }>(
       }
       case "boolean": {
         fieldValue = boolean();
+        break;
+      }
+      case "any": {
+        fieldValue = any();
         break;
       }
       case "object": {
@@ -126,7 +141,7 @@ function parse<T extends Schema>(
 
   const valueType = valueTypeRes.value;
 
-  if (!Array.isArray(value) && valueType !== type) {
+  if (type !== "any" && !Array.isArray(value) && valueType !== type) {
     return err(`Expected ${type}, got ${valueType}`);
   }
 
@@ -139,6 +154,9 @@ function parse<T extends Schema>(
       } else {
         return err(`Expected ${type}, got ${valueType}`);
       }
+    }
+    case "any": {
+      return ok(value);
     }
     case "array": {
       const _value = value as SupportedType[];
@@ -179,6 +197,7 @@ export const s = {
   string,
   number,
   boolean,
+  any,
   array,
   object,
   parse,

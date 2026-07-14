@@ -79,6 +79,9 @@ export class SettingsController<T extends SchemaObject> {
       case "boolean": {
         return ok(this._settings[keyRes.value]);
       }
+      case "any": {
+        return err("Setting must have a defined schema");
+      }
       case "array": {
         const arr = Array.from(
           this._settings[keyRes.value] as any[],
