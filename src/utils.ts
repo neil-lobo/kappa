@@ -1,4 +1,5 @@
 import { err, ok, Result } from "./result";
+import { null as null_ } from "chatterino.json";
 
 export function assertUnreachable(x: never): never {
   throw new Error("unreachable");
@@ -67,6 +68,9 @@ export type SupportedType = (typeof SUPPORTED_TYPES)[number];
 export function getSupportedType<T extends SupportedType>(
   value: T,
 ): Result<SupportedType, string> {
+  if (value === null_) {
+    return ok("undefined");
+  }
   const type = typeof value;
 
   if (["string", "number", "boolean", "undefined", "object"].includes(type)) {

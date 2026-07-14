@@ -6,6 +6,8 @@ import {
   SupportedType,
 } from "./utils";
 
+import { null as null_ } from "chatterino.json";
+
 export type SchemaString = { type: "string" };
 export type SchemaNumber = { type: "number" };
 export type SchemaBoolean = { type: "boolean" };
@@ -156,6 +158,10 @@ function parse<T extends Schema>(
       }
     }
     case "any": {
+      if (value === null_) {
+        return ok(null as any);
+      }
+
       return ok(value);
     }
     case "array": {
