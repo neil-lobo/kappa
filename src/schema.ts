@@ -158,10 +158,6 @@ function parse<T extends Schema>(
       }
     }
     case "any": {
-      if (value === null_) {
-        return ok(null as any);
-      }
-
       return ok(value);
     }
     case "array": {
