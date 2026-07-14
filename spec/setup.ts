@@ -18,11 +18,20 @@ const LogLevel = {
   Critical: 3,
 };
 
+const HTTPMethod = {
+  Get: 0,
+  Post: 1,
+  Put: 2,
+  Delete: 3,
+  Patch: 4,
+};
+
 globalThis.c2 = {
   log: (level: c2.LogLevel, ...messages: any[]): void => {
     print("chatterino.lua: [kappa:Kappa Test Suite]", ...messages);
   },
   LogLevel,
+  HTTPMethod,
 } as typeof c2;
 
 const mockFs = {
