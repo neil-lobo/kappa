@@ -19,7 +19,7 @@ export type CommandParams<T extends string> = {
       args?: T[];
       action: (
         ctx: CommandContext,
-        args: Partial<Record<T, string>>,
+        args: Record<T, string>,
       ) => CommandActionResult | Promise<CommandActionResult>;
     }
 );
@@ -78,7 +78,7 @@ export class Command<T extends string> {
       for (let i = 0; i < keys.length; i++) {
         _args[keys[i]] = vals[i];
       }
-      const res = await this.params.action(ctx, _args);
+      const res = await this.params.action(ctx, _args as Record<T, string>);
       if (!res.ok) {
         return res;
       }
