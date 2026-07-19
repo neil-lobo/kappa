@@ -26,12 +26,35 @@ const HTTPMethod = {
   Patch: 4,
 };
 
+class Channel {
+  static by_name(name: string): null | Channel {
+    return new Channel();
+  }
+
+  get_name(): string {
+    return "2547techno";
+  }
+
+  get_display_name(): string {
+    return "2547techno";
+  }
+
+  is_twitch_channel(): boolean {
+    return true;
+  }
+
+  get_twitch_id(): string {
+    return "64600767";
+  }
+}
+
 globalThis.c2 = {
   log: (level: c2.LogLevel, ...messages: any[]): void => {
     print("chatterino.lua: [kappa:Kappa Test Suite]", ...messages);
   },
   LogLevel,
   HTTPMethod,
+  Channel,
 } as typeof c2;
 
 const mockFs = {
