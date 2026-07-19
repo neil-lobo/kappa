@@ -21,8 +21,9 @@ npm install @neil-lobo/kappa
 - Result type
 - Settings controller
 - Fetch API
+- Command builder
 
 ## Planned
 
-- Command constructor with autocompletion support
+- Command builder autocompletion support
 - Message clone util
