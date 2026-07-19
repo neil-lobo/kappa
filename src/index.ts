@@ -7,3 +7,4 @@ export * from "./schema";
 export * from "./utils";
 export * from "./settings";
 export * from "./fetch";
+export * from "./command";
