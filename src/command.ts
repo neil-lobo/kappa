@@ -44,10 +44,6 @@ export class Command<T extends string> {
     }
   }
 
-  /**
-   * @throws {CommandError}
-   * @throws {Error}
-   */
   async run(
     ctx: CommandContext,
     args: string[],
