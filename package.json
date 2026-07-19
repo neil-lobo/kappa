@@ -1,6 +1,6 @@
 {
   "name": "@neil-lobo/kappa",
-  "version": "0.6.3",
+  "version": "0.7.0",
   "description": "A collection of common utils for Chatterino plugins",
   "scripts": {
     "clean:build": "rm -rf dist",
