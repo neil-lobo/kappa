@@ -59,6 +59,15 @@ export class Logger {
 
   constructor(params: Partial<LoggerParams> = {}) {
     this._params = Object.assign(this._defaultParam, params);
+
+    for (const output of this._params.outputs) {
+      if (output.type !== "file") continue;
+
+      const res = writeFile(output.filename, "w", "");
+      if (!res.ok) {
+        throw new Error(res.error);
+      }
+    }
   }
 
   log(level: LogLevel, ...messages: string[]) {
