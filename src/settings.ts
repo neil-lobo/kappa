@@ -47,7 +47,9 @@ export class SettingsController<T extends SchemaObject> {
     const writeRes = writeFile(
       this._options.filePath,
       "w",
-      stringify(this._defaultValues),
+      stringify(this._defaultValues, {
+        pretty: true,
+      }),
     );
     if (!writeRes.ok) {
       this._options.logger.error(
